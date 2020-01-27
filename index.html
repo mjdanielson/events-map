@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<meta charset='utf-8' />
+<title>University Partner Map</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.css' rel='stylesheet' />
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+
+</head>
+
+<style type="text/css">
+
+  body {
+        margin: 0;
+        padding: 0;
+      }
+
+  #mapId {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  }
+
+  /* .mapboxgl-popup {
+  max-width: 200px;
+  } */
+
+  .mapboxgl-popup-content {
+  font: 400 12px/20px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+  padding: 2;
+  /*controling transparency and color of pop-up */
+  background-color: rgba(255, 255, 255, .70);
+
+}
+
+</style>
+
+<body>
+  <div id="mapId"> </div>
+  <script type='text/javascript'>
+
+//Mapbox access token
+  mapboxgl.accessToken= "pk.eyJ1IjoibWpkYW5pZWxzb24iLCJhIjoiY2p2bzFlbnZ5MW5pbTN5cGJ2YWp2MW9vaiJ9.kAaZq3iyJwvrMLK7XDs_qw"
+
+//initialize your map
+  var map = new mapboxgl.Map({
+    container: "mapId",
+    style: "mapbox://styles/mapbox/dark-v10", //choose a style: https://docs.mapbox.com/api/maps/#styles
+    center: [-99.844,37.160],
+    zoom: 3.5
+  });
+
+//Tabletop function to access your table
+
+  function init() {
+      Tabletop.init({
+          key: 'https://docs.google.com/spreadsheets/d/1srR_7BXGtL8kntp5vXMho8dXp5hEAgC2gJFe4DrgGnY/pubhtml',
+          callback: addPoints,
+          simpleSheet: true
+      })
+  }
+
+    map.on("load", function(){
+      init()
+
+    })
+
+ //create a function that iterates through your table (row by row) to create markers and popups
+
+  function addPoints(data) {
+
+      data.forEach(function(row) {
+
+        var popup = new mapboxgl.Popup() //create a variable for your popup
+            .setText(row.Name) //use the table to populate your popup with text
+
+        var marker = new mapboxgl.Marker({color:'#bc45d1'}) //create a variable for your marker and select a color
+            .setLngLat([row.Longitude, row.Latitude]) //iterate through your table to set the marker to lat/long values for each row
+            .setPopup(popup) //bide the popup to the marker
+            .addTo(map); //add the marker to the map
+          });
+    }
+
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
